@@ -281,6 +281,7 @@ define network::interface (
   $restart_all_nic = $::osfamily ? {
     'RedHat' => $::operatingsystemmajrelease ? {
       '8'     => false,
+      '9'     => false,
       default => true,
     },
     default  => true,
@@ -680,14 +681,14 @@ define network::interface (
 
   # Resources
   $real_reload_command = $reload_command ? {
-    undef => $::operatingsystem ? {
-        'CumulusLinux' => 'ifreload -a',
-        'RedHat'       => $::operatingsystemmajrelease ? {
-          '8'     => "/usr/bin/nmcli con reload ; /usr/bin/nmcli device reapply ${interface}",
-          default => "ifdown ${interface} --force ; ifup ${interface}",
-        },
-        default        => "ifdown ${interface} --force ; ifup ${interface}",
+    undef => fact('os.family') ? {
+      'CumulusLinux' => 'ifreload -a',
+      'RedHat'       => fact('os.release.major') ? {
+        '7'     => "ifdown ${interface} --force ; ifup ${interface}",
+        default => "/usr/bin/nmcli con reload ; /usr/bin/nmcli device reapply ${interface}",
       },
+      default        => "ifdown ${interface} --force ; ifup ${interface}",
+    },
     default => $reload_command,
   }
   if $restart_all_nic == false and $::kernel == 'Linux' {
