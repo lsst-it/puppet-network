@@ -82,9 +82,6 @@ define network::mroute (
   $route_down_template = undef,
   $table               = undef,
 ) {
-  # Validate our arrays
-  validate_hash($routes)
-
   include ::network
   $real_reload_command = $reload_command ? {
     undef => $::operatingsystem ? {

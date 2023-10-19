@@ -2,5 +2,4 @@
 #
 define network::mroute::validate_gw($routes) {
   $route = $routes[$name]
-  validate_string($route)
 }

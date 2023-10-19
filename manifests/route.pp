@@ -116,43 +116,10 @@ define network::route (
   $interface = $name,
   $ensure    = 'present'
 ) {
-  # Validate our arrays
-  validate_array($ipaddress)
-  validate_array($netmask)
-
-  if $gateway {
-    validate_array($gateway)
-  }
-
-  if $metric {
-    validate_array($metric)
-  }
-
-  if $mtu {
-    validate_integer($mtu)
-  }
-
-  if $scope {
-    validate_array($scope)
-  }
-
-  if $source {
-    validate_array($source)
-  }
-
-  if $table {
-    validate_array($table)
-  }
-
   if $cidr {
-    validate_array($cidr)
     $_cidr = $cidr
   } else {
     $_cidr = build_cidr_array($netmask)
-  }
-
-  if $family {
-    validate_array($family)
   }
 
   include ::network
